@@ -1,0 +1,22 @@
+#!/bin/bash
+
+D=0.1105
+vol_h=97.02768
+
+vol_s=$(awk -v vol_h="$vol_h" 'BEGIN { printf "%.6f", vol_h / 3600 }')
+ux=$(awk -v vol_h="$vol_h" -v D="$D" 'BEGIN { printf (vol_h * 4) / (3.14*3600 * D^2) }')
+i=$(awk -v D="$D" -v ux="$ux" 'BEGIN { printf 0.16 * (1e6 * D * ux)^(-0.125) }')
+l=$(awk -v D="$D" 'BEGIN { printf 0.038 * D }')
+k=$(awk -v ux="$ux" -v i="$i" 'BEGIN { printf 1.5 * (ux * i)^2 }')
+epsilon=$(awk -v k="$k" -v l="$l" 'BEGIN { printf 0.09 * (k^1.5) / l }')
+omega=$(awk -v k="$k" -v l="$l" 'BEGIN { printf sqrt(k) / l }')
+nut=$(awk -v k="$k" -v epsilon="$epsilon" 'BEGIN { printf 0.09*k^2/epsilon }')
+new_U_value="($ux 0 0)"
+
+sed -i "s/volumetricFlowRate[[:space:]]*constant[[:space:]]*\(.*\)/volumetricFlowRate   constant $vol_s;/g" 0_org/U
+sed -i "s/internalField[[:space:]]*uniform[[:space:]]*\(.*\)/internalField   uniform $new_U_value;/g" 0_org/U
+sed -i "s/internalField   uniform [^;]*/internalField   uniform $k/g" 0_org/k
+sed -i "s/internalField   uniform [^;]*/internalField   uniform $epsilon/g" 0_org/epsilon
+sed -i "s/internalField   uniform [^;]*/internalField   uniform $omega/g" 0_org/omega
+sed -i "s/internalField   uniform [^;]*/internalField   uniform $nut/g" 0_org/nut
+echo "初始值已更新"

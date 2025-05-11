@@ -1,0 +1,55 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  8
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+
+sampleLines
+{
+    
+    type            sets;
+    libs            ("libsampling.so");
+
+    writeControl    writeTime;
+
+    setFormat       raw;
+    fields          (U p k omega nut);
+
+    interpolationScheme cellPointFace;
+
+    sets
+    (
+
+        line1
+        {
+            type    lineUniform;
+            axis    y;
+            start   (-1.5 -0.0552456 -0.0703);
+            end     (-1.5 0.0552456 -0.0703);
+            nPoints 50;
+        }
+        line2
+        {
+            type    lineUniform;
+            axis    z;
+            start   (-1.5 0 -0.12555);
+            end     (-1.5 0 -0.0150502);
+            nPoints 50;
+        } /*
+        boundaryPoints1
+        {
+            type        boundaryPoints;
+            patches     (bottom);
+            points
+            (
+                (0.5 0 -4.5)
+            );
+            maxDistance 0.01;
+            axis        xyz;
+        } */
+
+    );      
+}
+// ************************************************************************* //

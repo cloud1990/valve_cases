@@ -1,0 +1,53 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  7
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      setFieldsDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+defaultFieldValues
+(
+    volScalarFieldValue alpha.sludge 0
+    volVectorFieldValue U (0 0 0)
+);
+
+regions
+(
+    boxToCell
+    {
+        box (-10 -10 0) (10 50 3);
+        fieldValues
+        (
+			volScalarFieldValue alpha.sludge 0.9
+        );
+    }
+    // Setting values inside a surface geometry file
+    surfaceToCell
+    {
+        file            "constant/triSurface/pipe_select.stl";
+        outsidePoints  ( (0.2 0 3) );
+        includeCut     no;
+        includeInside  yes;
+        includeOutside no;
+        nearDistance   0;
+        curvature      0;
+        fieldValues
+        (
+            volScalarFieldValue alpha.sludge 0
+        );
+    }
+
+);
+
+
+// ************************************************************************* //
